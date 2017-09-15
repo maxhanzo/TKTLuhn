@@ -47,8 +47,7 @@
     [request setHTTPBody:[requestBody dataUsingEncoding:NSUTF8StringEncoding]];
     
     
-    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request
-                                                                     completionHandler:^( NSData *data, NSURLResponse *response, NSError *error)
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^( NSData *data, NSURLResponse *response, NSError *error)
                                       {
                                           
                                           if (error)
@@ -66,51 +65,23 @@
                                                   
                                                   if(dictFromData)
                                                   {
-                                                      NSLog(@"Card: %@", self.selectedCardNumber);
-                                                      NSDictionary *balanceData = [dictFromData objectForKey: @"cartaoSaldo"];
                                                       
-                                                      if([balanceData isKindOfClass: [NSDictionary class]])
+                                                      NSDictionary *balanceData = [dictFromData objectForKey: @"cartaoSaldo"];
+                                                      if(balanceData)
                                                       {
                                                           NSNumber *balance = [balanceData objectForKey: @"valor" ] ? [balanceData objectForKey: @"valor" ]: @0;
                                                           NSString *date = [balanceData objectForKey: @"data" ] ? [balanceData objectForKey: @"data" ]: @"N/A";
                                                           NSString *product = [balanceData objectForKey: @"produto" ] ? [balanceData objectForKey: @"produto" ]: @"N/A";
                                                           
-                                                          
-                                                          NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                                                          
-                                                          NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"pt_BR"];
-                                                          formatter.locale = locale;
-                                                          
-                                                          formatter.usesGroupingSeparator = YES;
-                                                          formatter.numberStyle = NSNumberFormatterCurrencyStyle;
-                                                          formatter.currencySymbol = @"R$";
-                                                          formatter.paddingPosition = NSNumberFormatterPadAfterPrefix;
-                                                          formatter.paddingCharacter = @" ";
-                                                          formatter.formatWidth = 7;
-                                                          formatter.groupingSize = 3;
-                                                          formatter.groupingSeparator = @".";
-                                                          formatter.decimalSeparator = @",";
-                                                          formatter.minimumIntegerDigits = 1;
-                                                          formatter.maximumFractionDigits = 2;
-                                                          formatter.minimumFractionDigits = 2;
-                                                          
-
-                                                          
-                                                          
-                                                          dispatch_async(dispatch_get_main_queue(),^{
-
-                                                              NSString *formattedBalance = [formatter stringFromNumber:balance ?: @0];
-                                                              
-                                                              [self setLabelsWithBalance:formattedBalance withProduct:product withDate:date];
-                                                          });
-                                                          
-                                                          
+                                                          self.lblDate.text = date;
+                                                          self.lblProduct.text = product;
+                                                          self.lblBalanceValue.text = [balance stringValue];
                                                           
                                                       }
                                                   }
                                               }
                                               
-                                          }
+                                           }
                                       }];
     
     [dataTask resume];
@@ -118,12 +89,7 @@
     
 }
 
--(void) setLabelsWithBalance: (NSString *) balance withProduct: (NSString*) product withDate: (NSString*) date
-{
-    [self.lblDate setText: date];
-    [self.lblProduct setText: product];
-    [self.lblBalanceValue setText: balance];
-}
+
 
 /*
 #pragma mark - Navigation

@@ -23,7 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //self.txtCardNumber.text = @"6033425800007311";
+    self.txtCardNumber.text = @"6033425800007311";
     self.tblPossibilities.delegate = self;
     self.possibilities = [NSMutableArray array];
     self.possibilitiesNOSPACES = [NSMutableArray array];
@@ -71,8 +71,6 @@
     NSString *strCardNumber = self.txtCardNumber.text ?:@"";
     self.possibilities = [NSMutableArray array];
     self.possibilitiesNOSPACES = [NSMutableArray array];
-    self.validCards = [NSMutableArray array];
-    [self.tblPossibilities reloadData];
      [self.btnValidate setHidden: YES];
 
     if([strCardNumber length] == 16)
@@ -160,16 +158,12 @@
                      {
                          NSDictionary *statusCartao = [listaStatus objectForKey: @"statusCartao"];
                          NSNumber *active = [statusCartao objectForKey: @"ativo"]? [statusCartao objectForKey: @"ativo"]:@0;
-                         NSNumber *cancelled = [statusCartao objectForKey: @"cancelado" ] ? [statusCartao objectForKey: @"cancelado"]: @1;
                          if([active boolValue])
                          {
-                             if([active boolValue]== true)
+                             if(active)
                              {
-                                 if([cancelled boolValue] !=1)
-                                 {
-                                     [self.validCards addObject: cardNumber];
-                                     NSLog(@"Valid! %@", cardNumber);
-                                 }
+                                 [self.validCards addObject: cardNumber];
+                                 NSLog(@"Valid! %@", cardNumber);
                              }
                          }
                      }
@@ -203,14 +197,7 @@
 //    [self.activityIndicator stopAnimating];
 //    self.tblPossibilities.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
-    dispatch_async(dispatch_get_main_queue(),^{
-        
-        [self.tblPossibilities reloadData];
-    });
-
-    
-    
-
+    [self.tblPossibilities reloadData];
 }
 
 #pragma mark - UITableViewDataSource & Delegate
