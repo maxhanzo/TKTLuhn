@@ -71,6 +71,8 @@
     NSString *strCardNumber = self.txtCardNumber.text ?:@"";
     self.possibilities = [NSMutableArray array];
     self.possibilitiesNOSPACES = [NSMutableArray array];
+    self.validCards = [NSMutableArray array];
+    [self.tblPossibilities reloadData];
      [self.btnValidate setHidden: YES];
 
     if([strCardNumber length] == 16)
